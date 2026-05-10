@@ -21,43 +21,43 @@ const impactStats = [
     icon: Users,
     iconBg: "bg-[#C5A059]/25",
     iconColor: "text-[#C5A059]",
-    value: "2,500+",
+    value: "500+",
     label: "Entrepreneurs",
   },
   {
     icon: MapPin,
     iconBg: "bg-[#F26522]/25",
     iconColor: "text-[#F26522]",
-    value: "75+",
+    value: "30+",
     label: "Cities",
   },
   {
     icon: TrendingUp,
     iconBg: "bg-emerald-500/25",
     iconColor: "text-emerald-400",
-    value: "98%",
+    value: "68%",
     label: "Success Rate",
   },
   {
     icon: Handshake,
     iconBg: "bg-[#C5A059]/25",
     iconColor: "text-[#C5A059]",
-    value: "150+",
+    value: "20+",
     label: "Deals Closed",
   },
   {
     icon: GraduationCap,
     iconBg: "bg-[#F26522]/25",
     iconColor: "text-[#F26522]",
-    value: "50+",
+    value: "10+",
     label: "Mentors",
   },
   {
     icon: Eye,
     iconBg: "bg-emerald-500/25",
     iconColor: "text-emerald-400",
-    value: "10M+",
-    label: "Monthly Views",
+    value: "5M+",
+    label: "Overall Views",
   },
 ];
 
@@ -110,14 +110,14 @@ export default function ImpactSection() {
           )}
         </div>
 
-        <div className="mt-12 flex flex-col items-stretch justify-between gap-4 rounded-[10px] border border-white/10 bg-[#061020] px-6 py-6 sm:flex-row sm:items-center sm:px-10">
+        {/* <div className="mt-12 flex flex-col items-stretch justify-between gap-4 rounded-[10px] border border-white/10 bg-[#061020] px-6 py-6 sm:flex-row sm:items-center sm:px-10">
           <p className="text-center text-sm font-medium text-white sm:text-left">
             Ready to take your business to the next level?
           </p>
           <Button className="h-11 shrink-0 rounded-[10px] bg-[#F26522] px-8 text-sm font-bold text-white hover:bg-[#e05518]">
             <Link href="/apply">Apply Now</Link>
           </Button>
-        </div>
+        </div> */}
       </div>
     </section>
   );

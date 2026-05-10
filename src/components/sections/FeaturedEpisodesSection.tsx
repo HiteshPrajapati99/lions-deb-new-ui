@@ -1,19 +1,19 @@
-"use client";
-
-import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Playfair_Display } from "next/font/google";
 import { Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  fetchLionsDenRecentVideos,
+  type YoutubeFeedVideo,
+} from "@/lib/youtube-feed";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   display: "swap",
 });
 
-const filters = ["All", "Season 1", "Season 2"] as const;
+const CHANNEL_VIDEOS_URL = "https://www.youtube.com/@thelionsdenshow/videos";
 
 interface EpisodeCardProps {
   title: string;
@@ -37,7 +37,12 @@ function EpisodeCard({
   href,
 }: EpisodeCardProps) {
   return (
-    <Link href={href} className="group block">
+    <Link
+      href={href}
+      className="group block"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <div className="overflow-hidden rounded-[10px] border border-gray-100 bg-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
         <div className="relative aspect-16/10 overflow-hidden">
           <Image
@@ -91,52 +96,74 @@ function EpisodeCard({
   );
 }
 
-const episodes: EpisodeCardProps[] = [
-  {
-    title: "The Breakthrough Pitch That Changed Everything",
-    tag: "S1 E1",
-    tagClass: "bg-emerald-600",
-    cornerTag: "Season 1",
-    cornerTagClass: "bg-emerald-700/90",
-    image: "/episode-1.png",
-    description:
-      "Watch the season opener as bold founders take the stage for the first time.",
-    href: "/episodes/s1e01",
-  },
-  {
-    title: "When Two Lions Fight for the Same Deal",
-    tag: "S1 E2",
-    tagClass: "bg-blue-600",
-    image: "/episode-2.png",
-    description:
-      "Tensions run high as investors compete for a breakthrough opportunity.",
-    href: "/episodes/s1e02",
-  },
-  {
-    title: "From Side Hustle to National Brand",
-    tag: "S1 E3",
-    tagClass: "bg-amber-500",
-    cornerTag: "New",
-    cornerTagClass: "bg-red-600",
-    image: "/episode-3.png",
-    description:
-      "The emotional journey of a founder who risked it all on national television.",
-    href: "/episodes/s1e03",
-  },
-  {
-    title: "The Deal That Almost Walked Away",
-    tag: "S1 E4",
-    tagClass: "bg-red-600",
-    image: "/show-1.png",
-    description:
-      "Last-minute negotiations prove that every second on the floor matters.",
-    href: "/episodes/s1e04",
-  },
-];
+function feedVideoToCardProps(
+  v: YoutubeFeedVideo,
+  index: number,
+): EpisodeCardProps {
+  const published =
+    v.publishedAt && !Number.isNaN(Date.parse(v.publishedAt))
+      ? new Intl.DateTimeFormat("en-IN", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }).format(new Date(v.publishedAt))
+      : undefined;
 
-export default function FeaturedEpisodesSection() {
-  const [activeFilter, setActiveFilter] =
-    React.useState<(typeof filters)[number]>("All");
+  const palette = [
+    "bg-emerald-600",
+    "bg-blue-600",
+    "bg-amber-500",
+    "bg-red-600",
+    "bg-violet-600",
+    "bg-teal-600",
+    "bg-rose-600",
+    "bg-sky-600",
+  ] as const;
+
+  return {
+    title: v.title,
+    tag: published !== undefined ? published : "New",
+    tagClass: palette[index % palette.length],
+    image: `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`,
+    description:
+      v.description || "Watch this pitch from The Lions' Den on YouTube.",
+    href: v.watchUrl,
+  };
+}
+
+export function FeaturedEpisodesSkeleton() {
+  return (
+    <section className="bg-gray-50 py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-3">
+            <div className="h-9 w-64 animate-pulse rounded-lg bg-gray-200 sm:h-10 sm:w-72" />
+            <div className="h-4 max-w-md animate-pulse rounded bg-gray-200" />
+            <div className="h-4 max-w-sm animate-pulse rounded bg-gray-100" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="overflow-hidden rounded-[10px] border border-gray-100 bg-white shadow-md"
+            >
+              <div className="aspect-16/10 animate-pulse bg-gray-200" />
+              <div className="space-y-2 p-4">
+                <div className="h-4 animate-pulse rounded bg-gray-200" />
+                <div className="h-4 w-3/4 animate-pulse rounded bg-gray-100" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default async function FeaturedEpisodesSection() {
+  const videos = await fetchLionsDenRecentVideos(4, { excludeShorts: true });
+  const episodes = videos.map(feedVideoToCardProps);
 
   return (
     <section className="bg-gray-50 py-16">
@@ -151,41 +178,51 @@ export default function FeaturedEpisodesSection() {
             >
               Featured Episodes
             </h2>
-            <p className="max-w-md text-sm text-gray-500">
-              Catch up on the latest pitches from the current season and witness
-              the drama unfold.
+            <p className="max-w-lg text-sm text-gray-500">
+              Latest uploads from{" "}
+              <span className="font-medium text-gray-700">
+                The Lions&apos; Den on YouTube
+              </span>
+              — full episodes, clips, and Shorts from the channel.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {filters.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setActiveFilter(f)}
-                className={cn(
-                  "rounded-lg px-4 py-2 text-xs font-bold transition-colors",
-                  activeFilter === f
-                    ? "bg-[#C5A059] text-white shadow-sm"
-                    : "border border-gray-200 bg-white text-gray-600 hover:border-gray-300",
-                )}
-              >
-                {f}
-              </button>
+        </div>
+
+        {episodes.length === 0 ? (
+          <div className="rounded-[10px] border border-dashed border-gray-200 bg-white px-6 py-14 text-center">
+            <p className="mb-4 text-sm text-gray-600">
+              We couldn&apos;t load the latest videos right now. Open the
+              channel on YouTube to watch recent uploads.
+            </p>
+            <Link
+              href={CHANNEL_VIDEOS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center justify-center rounded-[10px] bg-[#1a1a1a] px-8 text-sm font-bold text-white transition-colors hover:bg-black"
+            >
+              Watch on YouTube
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {episodes.map((ep, i) => (
+              <EpisodeCard key={videos[i]!.videoId} {...ep} />
             ))}
           </div>
-        </div>
+        )}
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {episodes.map((ep) => (
-            <EpisodeCard key={ep.href} {...ep} />
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Button className="h-11 rounded-[10px] bg-[#1a1a1a] px-8 text-sm font-bold text-white hover:bg-black">
-            <Link href="/episodes">View All Episodes</Link>
-          </Button>
-        </div>
+        {episodes.length > 0 && (
+          <div className="mt-12 text-center">
+            <Link
+              href={"https://www.wavespb.com/links/SH15472JGP"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center justify-center rounded-[10px] bg-[#1a1a1a] px-8 text-sm font-bold text-white transition-colors hover:bg-black"
+            >
+              View All Episodes
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

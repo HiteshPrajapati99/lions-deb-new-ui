@@ -4,7 +4,7 @@ import Footer from "@/components/layout/Footer";
 import FounderStoriesShowcase from "@/components/founderStories/FounderStoriesShowcase";
 
 export const metadata: Metadata = {
-  title: "Founder Success Stories | Lions Den",
+  title: "Season 01 | Lions Den",
   description:
     "Discover the inspiring journeys of entrepreneurs who transformed their dreams into thriving businesses with Lions Den.",
 };

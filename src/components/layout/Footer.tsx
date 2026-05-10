@@ -1,15 +1,8 @@
 import Link from "next/link";
 import { Playfair_Display } from "next/font/google";
-import {
-  MessageCircle,
-  Image as ImageIcon,
-  Briefcase,
-  PlayCircle,
-  ChevronRight,
-  Globe,
-  Heart,
-} from "lucide-react";
+import { ChevronRight, Globe, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SOCIAL_LINKS } from "@/lib/social-links";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -21,18 +14,15 @@ const columns = [
     title: "The Show",
     links: [
       { label: "Season 01", href: "/season-01" },
-      { label: "Founder Stories", href: "/founder-stories" },
       { label: "Meet the Lions", href: "/meet-the-lions" },
-      { label: "Behind the Scenes", href: "/behind-the-scenes" },
     ],
   },
   {
     title: "Quick Links",
     links: [
-      { label: "Pitch Your Idea", href: "/pitch" },
-      { label: "Partner Network", href: "/partners" },
+      { label: "Pitch Your Idea", href: "/start-your-journey" },
+      { label: "Behind the Scenes", href: "/behind-the-scenes" },
       { label: "Application Guide", href: "/apply/guide" },
-      { label: "Success Stories", href: "/success-stories" },
     ],
   },
   {
@@ -40,8 +30,6 @@ const columns = [
     links: [
       { label: "About Us", href: "/about" },
       { label: "Press & Media", href: "/press" },
-      { label: "Careers", href: "/careers" },
-      { label: "Contact", href: "/contact" },
     ],
   },
   {
@@ -54,13 +42,6 @@ const columns = [
     ],
   },
 ] as const;
-
-const socialLinks = [
-  { icon: MessageCircle, href: "https://twitter.com", label: "Twitter" },
-  { icon: ImageIcon, href: "https://instagram.com", label: "Instagram" },
-  { icon: Briefcase, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: PlayCircle, href: "https://youtube.com", label: "YouTube" },
-];
 
 export default function Footer() {
   return (
@@ -94,7 +75,7 @@ export default function Footer() {
               startup dreams into reality.
             </p>
             <div className="flex flex-wrap gap-2">
-              {socialLinks.map(({ icon: Icon, href, label }) => (
+              {SOCIAL_LINKS.map(({ Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}

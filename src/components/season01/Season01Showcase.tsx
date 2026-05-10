@@ -1,21 +1,15 @@
 "use client";
 
-import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Playfair_Display } from "next/font/google";
 import {
   ArrowRight,
-  ChevronDown,
   Coins,
   Eye,
   Layers,
-  Search,
   ShoppingBag,
-  Star,
   TrendingUp,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const playfair = Playfair_Display({
@@ -25,358 +19,146 @@ const playfair = Playfair_Display({
 });
 
 const stats = [
-  { value: "10", label: "Episodes", icon: Layers, iconWrap: "text-[#D4AF37]" },
-  { value: "36", label: "Total Pitches", icon: ShoppingBag, iconWrap: "text-[#F2994A]" },
-  { value: "58%", label: "Success Rate", icon: TrendingUp, iconWrap: "text-emerald-600" },
-  { value: "₹9.15 Cr", label: "Total Investment", icon: Coins, iconWrap: "text-[#D4AF37]" },
-  { value: "4.8", label: "Average Rating", icon: Star, iconWrap: "text-[#D4AF37]" },
-  { value: "24.3M", label: "Total Views", icon: Eye, iconWrap: "text-neutral-500" },
+  { value: "13", label: "Episodes", icon: Layers, iconWrap: "text-[#D4AF37]" },
+  {
+    value: "37",
+    label: "Total Pitches",
+    icon: ShoppingBag,
+    iconWrap: "text-[#F2994A]",
+  },
+  {
+    value: "58%",
+    label: "Success Rate",
+    icon: TrendingUp,
+    iconWrap: "text-emerald-600",
+  },
+  {
+    value: "₹13.65 Cr",
+    label: "Total Investment",
+    icon: Coins,
+    iconWrap: "text-[#D4AF37]",
+  },
+  {
+    value: "20M",
+    label: "Total Views",
+    icon: Eye,
+    iconWrap: "text-neutral-500",
+  },
 ] as const;
 
-type EpisodeStatus = "funded" | "noDealYellow" | "noDealRed";
+const WAVES_WATCH_URL = "https://www.wavespb.com/links/SH15472JGP";
 
 type EpisodeItem = {
   title: string;
   description: string;
-  status: EpisodeStatus;
-  industry: string;
-  investmentDisplay: string;
-  dateLabel: string;
   epLabel: string;
-  ratingLabel: string;
-  durationLabel: string;
+  /** Remote placeholder thumbnail (picsum) */
   imageSeed: number;
+  /** When set, uses a static asset under `/public` instead of picsum */
+  imageSrc?: string;
 };
 
+function episodeThumbnailSrc(ep: EpisodeItem) {
+  return ep.imageSrc ?? `https://picsum.photos/seed/ld${ep.imageSeed}/800/450`;
+}
+
+/** Content sourced from `episode.txt` */
 const episodes: EpisodeItem[] = [
   {
-    title: "Revolutionary EdTech Learning Platform",
-    description:
-      "Bridging classrooms and communities through adaptive curricula, vernacular support, and outcomes that founders can prove on stage.",
-    status: "funded",
-    industry: "EdTech",
-    investmentDisplay: "₹75,00,000",
-    dateLabel: "12 Oct 2023",
     epLabel: "Ep 01",
-    ratingLabel: "4.6",
-    durationLabel: "34:12",
+    title: "The First Roar: Startups, SuperAngels & Sustainability",
+    description:
+      "The premiere episode introduces the five Lions — top business leaders from across India and the UK — and unveils the show's unique format featuring SuperAngels investing in smaller ticket sizes (₹1–5 lakhs). Two innovative startups pitch: Tractor Wala, revolutionizing second-hand tractor access for farmers in Gwalior, and Strawonderz, offering eco-friendly, affordable alternatives to plastic straws made from rice and reed.",
     imageSeed: 201,
   },
   {
-    title: "Sustainable Fashion Innovation",
-    description:
-      "Circular materials, ethical supply chains, and a brand story woven for conscious consumers navigating fast fashion fatigue.",
-    status: "noDealYellow",
-    industry: "Fashion",
-    investmentDisplay: "No Deal",
-    dateLabel: "19 Oct 2023",
     epLabel: "Ep 02",
-    ratingLabel: "4.3",
-    durationLabel: "41:06",
+    title: "Driven by Purpose: Delivering Change, Empowering Minds",
+    description:
+      "Episode 2 features two powerful startups solving real-world problems. Shippin, a tech-first last-mile logistics company, showcases its rapid growth and success across Eastern India, with over 18 lakh deliveries and major clients like Amazon and Reliance Jiomart. GAV Square Edu. Healthcare, founded by psychologist Manasi who lives with a learning disability herself, presents a pioneering digital platform and app to identify and support children with learning disabilities like dyslexia, aiming to bridge the education gap through multisensory, gamified learning and therapy.",
     imageSeed: 202,
   },
   {
-    title: "Virtual Reality in Mental Healthcare",
-    description:
-      "Immersive therapy protocols with clinical guardrails pitched as accessible care for anxiety, stress, and remote counselling.",
-    status: "noDealRed",
-    industry: "HealthTech",
-    investmentDisplay: "No Deal",
-    dateLabel: "26 Oct 2023",
     epLabel: "Ep 03",
-    ratingLabel: "4.5",
-    durationLabel: "36:54",
+    title: "Smart Play & Smart Waste: A Greener, Brighter Bharat",
+    description:
+      "Episode 3 features two startups tackling educational and environmental gaps. MakenBreak offers DIY STEM building toys that bridge classroom learning with real-world engineering, promote family bonding, and prepare kids for future careers through hands-on play. Scrapji simplifies waste recycling by providing doorstep scrap pickup at fair market rates, using tech to make sustainability seamless and accessible for every household.",
     imageSeed: 203,
   },
   {
-    title: "Farm to Table Food Delivery Network",
-    description:
-      "Cold-chain freshness, farmer-first pricing, and city kitchens promising traceability from soil to supper in under a day.",
-    status: "funded",
-    industry: "AgriFood",
-    investmentDisplay: "₹1,20,00,000",
-    dateLabel: "2 Nov 2023",
     epLabel: "Ep 04",
-    ratingLabel: "4.7",
-    durationLabel: "38:12",
+    title: "Stories & Simulations: The Future Goes Digital",
+    description:
+      "Episode 4 brings two innovative digital ventures to the Den. Monkey Science presents cutting-edge simulation technology, using mixed reality and holography to revolutionize experiential learning across industries. Writeroo showcases a fast-growing global platform for readers and writers, offering a freemium model, monetization for creators, and a thriving literary community in over 75 countries.",
     imageSeed: 204,
   },
   {
-    title: "Smart Home Automation for Indian Households",
-    description:
-      "Affordable retrofit kits, regional language assistants, and energy insights tuned for Apartments, villas, and growing smart cities.",
-    status: "funded",
-    industry: "Smart Home",
-    investmentDisplay: "₹95,00,000",
-    dateLabel: "9 Nov 2023",
     epLabel: "Ep 05",
-    ratingLabel: "4.8",
-    durationLabel: "39:41",
+    title: "Sugar & Surveillance: Innovation for Taste and Tech",
+    description:
+      "Episode 5 showcases two dynamic ventures. Yumeatd's Sweet Delights Confectionery brings indulgence to the table with its premium chocolates, wafer rolls, and candies, backed by state-of-the-art production, retail presence, and a strong R&D pipeline. SIS (Smart Investigation System) introduces a breakthrough tech tool for cybersecurity and law enforcement, automating data analysis and cutting investigation time by 80% through its powerful, intuitive dashboard.",
     imageSeed: 205,
   },
   {
-    title: "Artisan Marketplace Platform",
-    description:
-      "A curator-led storefront celebrating master makers with logistics, storytelling, and transparent payouts for craftsmen.",
-    status: "noDealYellow",
-    industry: "Marketplace",
-    investmentDisplay: "No Deal",
-    dateLabel: "16 Nov 2023",
     epLabel: "Ep 06",
-    ratingLabel: "4.2",
-    durationLabel: "33:27",
+    title: "Protect & Preserve: Powering Safety and Spirituality",
+    description:
+      "Episode 6 presents two purpose-driven startups blending safety and spirituality. Shakti Wearables, India's first street-smart personal defense company, introduces a cutting-edge wearable for women's safety, combining electrocution capability with real-time SOS alerts. Easykiya, India's first and fastest-growing online daily subscription platform for fresh farm puja flowers and garlands, offers doorstep delivery through a strong local sourcing and logistics network—making daily rituals effortless for homes and offices while preserving cultural traditions.",
     imageSeed: 206,
   },
   {
-    title: "Mental Health Counseling App",
-    description:
-      "Licensed therapists on demand with mood tracking, culturally aware care plans, and B2B routes into enterprises and campuses.",
-    status: "funded",
-    industry: "Wellness",
-    investmentDisplay: "₹82,50,000",
-    dateLabel: "23 Nov 2023",
     epLabel: "Ep 07",
-    ratingLabel: "4.7",
-    durationLabel: "40:03",
+    title: "Code & Care: Innovating Health and Learning",
+    description:
+      "Episode 7 features two transformative startups using technology to uplift lives. SETV introduces its AI-driven healthcare platform, SETV.W AI, aiming to redefine global medical care by minimizing diagnostic errors, enabling early detection, and providing real-time, personalized treatment—even in remote areas. On the education front, NAVKRITI presents a revolutionary peer-learning app designed by a duo of tech experts. With features like quizzes, games, video content, a translator, and a custom search engine, it turns idle screen time into engaging, productive learning experiences. Together, these ventures demonstrate how innovation in health and education can create meaningful impact at scale.",
     imageSeed: 207,
   },
   {
-    title: "Electric Vehicle Charging Network",
-    description:
-      "Modular chargers, uptime-first operations software, and partnerships aimed at India's next decade of mobility infrastructure.",
-    status: "funded",
-    industry: "EV Infra",
-    investmentDisplay: "₹2,40,00,000",
-    dateLabel: "30 Nov 2023",
     epLabel: "Ep 08",
-    ratingLabel: "4.9",
-    durationLabel: "42:58",
+    title: "Sweet Traditions, Smart Innovations",
+    description:
+      "Episode 8 presents two ventures blending tradition with innovation. Honeyman, founded by the third-generation of a beekeeping legacy, is transforming how India consumes honey with the world's largest range of bee-based products—from FMCG items and wellness supplements to café experiences. Their model not only promotes healthier alternatives but also supports sustainable beekeeping and rural livelihoods. On the other hand, Epanipurii Kartz reinvents India's most loved street snack with a high-tech twist—offering a touchless Panipuri vending experience via mobile app and e-nose technology, ensuring hygiene, real-time ingredient quality checks, and a unique flavor experience. Together, these startups represent the fusion of heritage and cutting-edge technology for a healthier, safer tomorrow.",
     imageSeed: 208,
   },
   {
-    title: "Organic Beauty Products Line",
-    description:
-      "Farm-sourced botanicals, plastic-light packaging, and science-backed formulations built for discerning Indian skincare routines.",
-    status: "noDealRed",
-    industry: "Beauty",
-    investmentDisplay: "No Deal",
-    dateLabel: "7 Dec 2023",
     epLabel: "Ep 09",
-    ratingLabel: "4.4",
-    durationLabel: "35:49",
+    title: "Smart Audits and Sustainable Packaging",
+    description:
+      "Episode 9 features two forward-thinking startups focused on technology and sustainability. Infilytics Private Limited's iAudit is an AI-powered analytics automation platform that helps companies accelerate their journey from data to decisions by automating audits, compliance, and financial controls. Trusted by major organizations like RBI and KPMG, iAudit is redefining how businesses handle complex financial processes. Meanwhile, Paprap by TheFuture.Green pioneers eco-friendly innovations in packaging by offering sustainable, upcycled alternatives to paper and plastic products. From office stationery to food packaging, Paprap's creative solutions address the growing demand for responsible consumer products, promoting a greener planet through smart design and recycling efforts.",
     imageSeed: 209,
   },
   {
-    title: "Waste Management Innovation",
-    description:
-      "Segregation-tech, recycler networks, and city pilots promising cleaner landfills with measurable diverted tonnage quarterly.",
-    status: "funded",
-    industry: "CleanTech",
-    investmentDisplay: "₹68,00,000",
-    dateLabel: "14 Dec 2023",
     epLabel: "Ep 10",
-    ratingLabel: "4.6",
-    durationLabel: "37:22",
+    title: "Smart Inspections, Fitness Innovation & Better Travel Comfort",
+    description:
+      'Episode 10 introduces three startups transforming their industries with innovative solutions. Checkkardo.com offers expert new car pre-delivery inspection (PDI) and used car inspection services, providing detailed reports to help customers make informed buying decisions. Gymshim WorkoutPlus Kiosk (WPK) by Fitlyberty delivers interactive, AI-powered fitness training solutions with gamification features through touchscreen kiosks, designed for commercial, residential, and corporate gyms. Their gym management software is trusted by over 1500 gyms nationwide. Addressing a critical need in public sanitation, Lootel launched the "Take a Break" concept to improve transit experiences by providing premium facilities such as restrooms with showers, lockers, and a cafeteria. Operating on a pay-and-redeem system, Lootel\'s outlets are making travel more comfortable and hygienic for millions across India.',
     imageSeed: 210,
   },
-];
-
-function statusBadge(status: EpisodeStatus) {
-  if (status === "funded") {
-    return { label: "Funded", className: "bg-emerald-600 text-white" };
-  }
-  if (status === "noDealYellow") {
-    return { label: "No Deal", className: "bg-amber-400 text-[#1a1a1a]" };
-  }
-  return { label: "No Deal", className: "bg-red-600 text-white" };
-}
-
-const industries = ["All Industries", ...Array.from(new Set(episodes.map((e) => e.industry)))];
-
-const investmentRanges = [
-  "All Investment Ranges",
-  "Funded deals only",
-  "No Deal",
-  "Under ₹1 Cr",
-  "₹1 Cr and above",
-] as const;
-
-const sortOptions = ["Latest to Oldest", "Oldest to Latest", "Highest Rated"] as const;
-
-type ExclusiveCat = "all" | "interviews" | "behind" | "expert";
-
-const exclusiveTabs: { key: ExclusiveCat; label: string }[] = [
-  { key: "all", label: "All Content" },
-  { key: "interviews", label: "Interviews" },
-  { key: "behind", label: "Behind the Scenes" },
-  { key: "expert", label: "Expert Analysis" },
-];
-
-const exclusiveItems: {
-  title: string;
-  excerpt: string;
-  badge: string;
-  badgeClass: string;
-  cat: ExclusiveCat | ExclusiveCat[];
-  seed: number;
-}[] = [
   {
-    title: "Core Investment Philosophy Inside the Room",
-    excerpt: "Why conviction, founder-market fit, and discipline matter before any term sheet lands on the table.",
-    badge: "Expert Analysis",
-    badgeClass: "bg-[#F2994A] text-white",
-    cat: "expert",
-    seed: 301,
+    epLabel: "Ep 11",
+    title: "Innovating Agriculture & Empowering Street Vendors",
+    description:
+      "Episode 11 features two startups revolutionizing traditional sectors with cutting-edge solutions. AVN Agrobharat Pvt Ltd excels in agriculture, animal husbandry, and dairy technology, offering wholesale trading, breeding, dairy farm setup, and product processing. Their focus on innovation and consultancy helps farmers and businesses improve productivity and quality. Meanwhile, Heva Electric introduces the ElectroCart, a special-purpose electric vehicle designed specifically for street vendors. This eco-friendly, motorized cart enhances vendor productivity and customer interaction by allowing vendors to serve while seated, reducing physical strain. With a durable design and sustainable focus, Heva Electric aims to scale their impact across metro cities, transforming urban mobility for small businesses.",
+    imageSeed: 211,
   },
   {
-    title: "The Pitch That Almost Wasn't",
-    excerpt: "The late-night rehearsals, nerves in the wings, and the last-minute tweaks that reshaped the final story.",
-    badge: "Interviews",
-    badgeClass: "bg-[#D4AF37] text-[#1a1a1a]",
-    cat: "interviews",
-    seed: 302,
+    epLabel: "Ep 12",
+    title: "Plugged In and Powered Up: EVs and Early Learning",
+    description:
+      "Episode 12 introduces two forward-thinking startups shaping different aspects of the future. Nikol EV is building one of India's largest EV charging networks, manufacturing chargers and setting up fast charging stations. Their mobile app helps EV owners easily locate, book, pay, and charge at over 3,000 chargers, making electric vehicle adoption more accessible. On the education front, Respond Right Smart School offers the world's first in-school program focused on right brain development through engaging, multidisciplinary activities. Designed for children aged 2 to 8, the program promotes balanced intellectual and emotional growth using interactive lessons, technology integration, and teacher training. Compliant with NEP 2020, it aims to unlock each child's full potential for lifelong success.",
+    imageSeed: 212,
   },
   {
-    title: "Setting Up the Live Show Studio",
-    excerpt: "Lighting grids, lion seating, sonic balance, and the choreography hiding behind seamless broadcasts.",
-    badge: "Behind the Scenes",
-    badgeClass: "bg-neutral-600 text-white",
-    cat: "behind",
-    seed: 303,
-  },
-  {
-    title: "Founder's Journey: From Idea to Proposal",
-    excerpt: "How decks evolve, mentors intervene, and raw ideas become numbers the room can argue about with clarity.",
-    badge: "Interviews",
-    badgeClass: "bg-[#D4AF37] text-[#1a1a1a]",
-    cat: "interviews",
-    seed: 304,
-  },
-  {
-    title: "The Emotional Moment That Made the Interest",
-    excerpt: "When silence breaks, convictions align, and a split-second tells you the deal emotionally turned.",
-    badge: "Behind the Scenes",
-    badgeClass: "bg-neutral-600 text-white",
-    cat: "behind",
-    seed: 305,
-  },
-  {
-    title: "A Day in the Life of Production",
-    excerpt: "Call times, countdowns, and the crew sprint between segments that viewers never notice on camera.",
-    badge: "Behind the Scenes",
-    badgeClass: "bg-neutral-600 text-white",
-    cat: "behind",
-    seed: 306,
+    epLabel: "Ep 13",
+    title: "Property, Sustainability & Coffee: Innovations Brewing",
+    description:
+      "Episode 13 features three promising ventures transforming their industries. Rentofy offers a comprehensive property management platform that simplifies rental listings, maintenance, and financial tracking, helping homeowners and real estate investors manage their properties effortlessly. Rcube Recycling innovates in environmental sustainability by recycling used printer toner cartridges and converting the waste toner powder into reusable material, reducing dependency on imported toners. Kettleberry Coffee, a homegrown flavored instant coffee brand launched in 2022, combines quality and convenience through its quick-service restaurants and cafes, aiming to expand its footprint as a leading coffee takeaway chain.",
+    imageSeed: 213,
+    imageSrc: "/season-01/ep-13.png",
   },
 ];
-
-function matchesExclusive(cat: ExclusiveCat, item: (typeof exclusiveItems)[number]) {
-  if (cat === "all") return true;
-  const tags = Array.isArray(item.cat) ? item.cat : [item.cat];
-  return tags.includes(cat);
-}
-
-function SelectField({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  options: readonly string[];
-}) {
-  const id = React.useId();
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="block text-sm font-semibold text-black">
-        {label}
-      </label>
-      <div className="relative">
-        <select
-          id={id}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={cn(
-            "h-11 w-full cursor-pointer appearance-none rounded-xl border border-neutral-200 bg-white px-3.5 pr-10 text-sm text-[#4F4F4F]",
-            "shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-colors focus-visible:border-[#F2994A] focus-visible:ring-2 focus-visible:ring-[#F2994A]/25"
-          )}
-        >
-          {options.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400"
-          aria-hidden
-        />
-      </div>
-    </div>
-  );
-}
 
 export default function Season01Showcase() {
-  const [query, setQuery] = React.useState("");
-  const [epFilter, setEpFilter] = React.useState("All Episodes");
-  const [industryFilter, setIndustryFilter] = React.useState("All Industries");
-  const [investmentFilter, setInvestmentFilter] =
-    React.useState<(typeof investmentRanges)[number]>("All Investment Ranges");
-  const [sortBy, setSortBy] = React.useState<(typeof sortOptions)[number]>("Latest to Oldest");
-  const [exclusiveTab, setExclusiveTab] = React.useState<ExclusiveCat>("all");
-
-  const filteredEpisodes = React.useMemo(() => {
-    let list = [...episodes];
-
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
-      list = list.filter(
-        (e) =>
-          e.title.toLowerCase().includes(q) ||
-          e.industry.toLowerCase().includes(q) ||
-          e.description.toLowerCase().includes(q)
-      );
-    }
-
-    if (industryFilter !== "All Industries") {
-      list = list.filter((e) => e.industry === industryFilter);
-    }
-
-    if (investmentFilter === "Funded deals only") {
-      list = list.filter((e) => e.status === "funded");
-    }
-    if (investmentFilter === "No Deal") {
-      list = list.filter((e) => e.status !== "funded");
-    }
-    if (investmentFilter === "Under ₹1 Cr") {
-      list = list.filter((e) => {
-        const n = episodeInvestmentNumber(e.investmentDisplay);
-        return n !== null && n < 1e7;
-      });
-    }
-    if (investmentFilter === "₹1 Cr and above") {
-      list = list.filter((e) => {
-        const n = episodeInvestmentNumber(e.investmentDisplay);
-        return n !== null && n >= 1e7;
-      });
-    }
-
-    if (epFilter !== "All Episodes") {
-      const num = epFilter.replace(/\D/g, "");
-      list = list.filter((e) => e.epLabel.replace(/\D/g, "") === num);
-    }
-
-    if (sortBy === "Highest Rated") {
-      list.sort((a, b) => parseFloat(b.ratingLabel) - parseFloat(a.ratingLabel));
-    } else if (sortBy === "Latest to Oldest") {
-      list.reverse();
-    }
-
-    return list;
-  }, [query, industryFilter, investmentFilter, sortBy, epFilter]);
-
   return (
     <main className="bg-white pb-20 pt-24 sm:pt-28">
       {/* Hero */}
@@ -388,19 +170,20 @@ export default function Season01Showcase() {
           <h1
             className={cn(
               playfair.className,
-              "mt-4 text-4xl font-semibold tracking-tight text-black sm:text-5xl lg:text-[2.75rem] lg:leading-[1.15]"
+              "mt-4 text-4xl font-semibold tracking-tight text-black sm:text-5xl lg:text-[2.75rem] lg:leading-[1.15]",
             )}
           >
             Relive Every Pitch, Every Deal
           </h1>
           <p className="mx-auto mt-5 max-w-[52rem] text-base leading-relaxed text-[#4F4F4F]">
-            Watch all 10 episodes of Season 01, featuring 36 passionate entrepreneurs, ₹9.15 Cr in investments,
-            and countless inspiring stories of ambition meeting opportunity.
+            Watch all 13 episodes of Season 01, featuring passionate
+            entrepreneurs and countless inspiring stories of ambition meeting
+            opportunity.
           </p>
         </div>
 
         {/* Stats */}
-        <div className="mx-auto mt-12 grid max-w-[1200px] grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mx-auto mt-12 grid max-w-[1200px] grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {stats.map((s) => {
             const Icon = s.icon;
             return (
@@ -408,60 +191,23 @@ export default function Season01Showcase() {
                 key={s.label}
                 className="rounded-xl border border-neutral-100 bg-white p-5 text-center shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12)]"
               >
-                <div className={cn("mx-auto mb-3 inline-flex rounded-lg bg-neutral-50 p-2.5", s.iconWrap)}>
+                <div
+                  className={cn(
+                    "mx-auto mb-3 inline-flex rounded-lg bg-neutral-50 p-2.5",
+                    s.iconWrap,
+                  )}
+                >
                   <Icon className="size-5" strokeWidth={1.85} aria-hidden />
                 </div>
-                <p className="text-2xl font-bold tabular-nums text-black">{s.value}</p>
-                <p className="mt-1 text-xs font-medium text-[#4F4F4F]">{s.label}</p>
+                <p className="text-2xl font-bold tabular-nums text-black">
+                  {s.value}
+                </p>
+                <p className="mt-1 text-xs font-medium text-[#4F4F4F]">
+                  {s.label}
+                </p>
               </div>
             );
           })}
-        </div>
-      </section>
-
-      {/* Filter */}
-      <section className="bg-[#F9F9F9] px-4 py-12 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-[1200px]">
-          <h2 className="text-xl font-bold text-black">Filter Episodes</h2>
-          <p className="mt-1 text-sm text-[#4F4F4F]">Search and filter through the season.</p>
-
-          <div className="relative mt-6">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-neutral-400" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by episode name, industry, or entrepreneur..."
-              className={cn(
-                "h-12 w-full rounded-xl border-neutral-200 bg-white pl-10 pr-4 text-[#4F4F4F] shadow-[0_1px_2px_rgba(0,0,0,0.04)]",
-                "placeholder:text-neutral-400 focus-visible:border-[#F2994A] focus-visible:ring-[#F2994A]/25"
-              )}
-            />
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <SelectField
-              label="Episode"
-              value={epFilter}
-              onChange={setEpFilter}
-              options={[
-                "All Episodes",
-                ...episodes.map((_, i) => `Episode ${String(i + 1).padStart(2, "0")}`),
-              ]}
-            />
-            <SelectField label="Industry" value={industryFilter} onChange={setIndustryFilter} options={industries} />
-            <SelectField
-              label="Investment Range"
-              value={investmentFilter}
-              onChange={(v) => setInvestmentFilter(v as (typeof investmentRanges)[number])}
-              options={investmentRanges as unknown as readonly string[]}
-            />
-            <SelectField
-              label="Sort By"
-              value={sortBy}
-              onChange={(v) => setSortBy(v as (typeof sortOptions)[number])}
-              options={sortOptions}
-            />
-          </div>
         </div>
       </section>
 
@@ -469,143 +215,53 @@ export default function Season01Showcase() {
       <section className="px-4 py-14 sm:px-6 lg:px-10">
         <div className="mx-auto flex max-w-[1200px] items-end justify-between gap-4">
           <h2 className="text-xl font-bold text-black">All Episodes</h2>
-          <p className="text-sm font-medium text-[#4F4F4F]">10 episodes</p>
+          <p className="text-sm font-medium text-[#4F4F4F]">13 episodes</p>
         </div>
 
         <div className="mx-auto mt-8 grid max-w-[1200px] grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredEpisodes.map((ep) => {
-            const badge = statusBadge(ep.status);
-            return (
-              <article
-                key={ep.epLabel}
-                className="flex flex-col overflow-hidden rounded-xl border border-neutral-100 bg-white shadow-[0_12px_40px_-18px_rgba(15,23,42,0.18)]"
+          {episodes.map((ep) => (
+            <article
+              key={ep.epLabel}
+              className="flex flex-col overflow-hidden rounded-xl border border-neutral-100 bg-white shadow-[0_12px_40px_-18px_rgba(15,23,42,0.18)]"
+            >
+              <a
+                href={WAVES_WATCH_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative block aspect-video w-full overflow-hidden bg-neutral-100 outline-offset-2 focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
               >
-                <div className="relative aspect-video w-full overflow-hidden bg-neutral-100">
-                  <Image
-                    src={`https://picsum.photos/seed/ld${ep.imageSeed}/800/450`}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                  />
-                  <div className="absolute left-3 top-3 z-10">
-                    <span className={cn("rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide", badge.className)}>
-                      {badge.label}
-                    </span>
-                  </div>
-                  <span className="absolute bottom-3 right-3 rounded-md bg-black/75 px-2 py-1 text-[11px] font-semibold text-white">
-                    {ep.durationLabel}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-base font-bold leading-snug text-black">{ep.title}</h3>
-                  <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[#4F4F4F]">{ep.description}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#4F4F4F]">
-                    <span>{ep.dateLabel}</span>
-                    <span className="text-neutral-300">|</span>
-                    <span>{ep.epLabel}</span>
-                    <span className="text-neutral-300">|</span>
-                    <span className="inline-flex items-center gap-1">
-                      <Star className="size-3.5 text-[#D4AF37]" fill="#D4AF37" aria-hidden /> {ep.ratingLabel}
-                    </span>
-                  </div>
-                  <div className="mt-5 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-4 text-xs">
-                    <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-wide text-neutral-400">Industry</p>
-                      <p className="mt-0.5 font-semibold text-black">{ep.industry}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-[10px] font-semibold uppercase tracking-wide text-neutral-400">
-                        Investment
-                      </p>
-                      <p
-                        className={cn(
-                          "mt-0.5 font-semibold",
-                          ep.status === "funded" ? "text-[#D4AF37]" : "text-[#4F4F4F]"
-                        )}
-                      >
-                        {ep.investmentDisplay}
-                      </p>
-                    </div>
-                    <div className="flex items-end justify-end">
-                      <Link
-                        href="#"
-                        className="inline-flex items-center gap-1 text-xs font-bold text-[#D4AF37] transition-colors hover:text-[#c49b2f]"
-                      >
-                        Watch Episode
-                        <ArrowRight className="size-3.5" aria-hidden />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Exclusive */}
-      <section className="bg-neutral-100/90 px-4 py-16 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-[1200px]">
-          <h2 className={cn(playfair.className, "text-2xl font-semibold tracking-tight text-black sm:text-3xl")}>
-            Exclusive Content
-          </h2>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#4F4F4F]">
-            Deep dive into the behind-the-scenes and expert analysis.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            {exclusiveTabs.map((t) => (
-              <button
-                key={t.key}
-                type="button"
-                onClick={() => setExclusiveTab(t.key)}
-                className={cn(
-                  "rounded-full px-5 py-2 text-sm font-semibold transition-colors",
-                  exclusiveTab === t.key
-                    ? "bg-[#D4AF37] text-white shadow-sm"
-                    : "bg-white text-[#4F4F4F] ring-1 ring-neutral-200 hover:bg-neutral-50"
-                )}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {exclusiveItems.filter((item) => matchesExclusive(exclusiveTab, item)).map((item) => (
-              <article
-                key={item.title}
-                className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-[0_10px_35px_-20px_rgba(15,23,42,0.2)]"
-              >
-                <div className="relative aspect-video w-full overflow-hidden bg-neutral-100">
-                  <Image
-                    src={`https://picsum.photos/seed/ex${item.seed}/800/450`}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                  />
-                  <span className={cn("absolute left-3 top-3 rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide", item.badgeClass)}>
-                    {item.badge}
-                  </span>
-                </div>
-                <div className="p-4">
-                  <h3 className="text-sm font-bold leading-snug text-black">{item.title}</h3>
-                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[#4F4F4F]">{item.excerpt}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+                <Image
+                  src={episodeThumbnailSrc(ep)}
+                  alt=""
+                  fill
+                  className="object-cover transition-transform duration-300 hover:scale-[1.02]"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                />
+                <span className="absolute left-3 top-3 rounded-md bg-black/75 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+                  {ep.epLabel}
+                </span>
+              </a>
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="text-base font-bold leading-snug text-black">
+                  {ep.title}
+                </h3>
+                <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-[#4F4F4F]">
+                  {ep.description}
+                </p>
+                <a
+                  href={WAVES_WATCH_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#D4AF37] hover:underline"
+                >
+                  Watch on Waves
+                  <ArrowRight className="size-4" strokeWidth={2} aria-hidden />
+                </a>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     </main>
   );
-}
-
-function episodeInvestmentNumber(s: string): number | null {
-  if (!s.includes("₹")) return null;
-  const normalized = s.replace(/₹|,/g, "").trim();
-  const n = Number.parseInt(normalized, 10);
-  return Number.isFinite(n) ? n : null;
 }

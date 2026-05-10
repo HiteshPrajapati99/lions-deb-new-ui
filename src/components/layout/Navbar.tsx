@@ -16,33 +16,46 @@ const playfair = Playfair_Display({
 const mainNavLinks = [
   { label: "Home", href: "/" },
   { label: "Season 01", href: "/season-01" },
-  { label: "Founder Stories", href: "/founder-stories" },
+  // { label: "Founder Stories", href: "/founder-stories" },
   { label: "Meet the Lions", href: "/meet-the-lions" },
 ] as const;
 
 const moreLinks = [
   { label: "Partner Network", href: "/partner-network" },
-  { label: "Pitch Your Idea", href: "/pitch-your-idea" },
+  { label: "Pitch Your Idea", href: "/start-your-journey" },
 ] as const;
 
 const NAV_LINK_CLASS =
   "text-white text-sm font-medium px-3 py-2 rounded-md transition-colors hover:bg-white/10";
 
-function BrandMark({ showTaglineOnMobile = false }: { showTaglineOnMobile?: boolean }) {
-  const textVisible = showTaglineOnMobile ? "flex flex-col pt-0.5" : "hidden sm:flex flex-col pt-0.5";
+function BrandMark({
+  showTaglineOnMobile = false,
+}: {
+  showTaglineOnMobile?: boolean;
+}) {
+  const textVisible = showTaglineOnMobile
+    ? "flex flex-col pt-0.5"
+    : "hidden sm:flex flex-col pt-0.5";
 
   return (
     <Link href="/" className="flex items-start gap-3 min-w-0">
       <div
         className={cn(
           "shrink-0 w-10 h-10 rounded-md bg-[#d4af37] flex items-center justify-center",
-          playfair.className
+          playfair.className,
         )}
       >
-        <span className="text-white text-sm font-bold leading-none tracking-tight">LD</span>
+        <span className="text-white text-sm font-bold leading-none tracking-tight">
+          LD
+        </span>
       </div>
       <div className={cn("min-w-0", textVisible)}>
-        <span className={cn("text-white text-lg font-bold leading-tight block", playfair.className)}>
+        <span
+          className={cn(
+            "text-white text-lg font-bold leading-tight block",
+            playfair.className,
+          )}
+        >
           Lions Den
         </span>
         <span className="text-[#94a3b8] text-xs font-normal leading-snug mt-0.5 block">
@@ -62,7 +75,10 @@ export default function Navbar() {
   useEffect(() => {
     if (!moreOpen) return;
     const onDown = (e: MouseEvent) => {
-      if (moreWrapRef.current && !moreWrapRef.current.contains(e.target as Node)) {
+      if (
+        moreWrapRef.current &&
+        !moreWrapRef.current.contains(e.target as Node)
+      ) {
         setMoreOpen(false);
       }
     };
@@ -94,14 +110,14 @@ export default function Navbar() {
                 className={cn(
                   NAV_LINK_CLASS,
                   "inline-flex items-center gap-1 bg-transparent cursor-pointer",
-                  moreOpen && "bg-white/10"
+                  moreOpen && "bg-white/10",
                 )}
               >
                 More
                 <ChevronDown
                   className={cn(
                     "size-4 shrink-0 text-white transition-transform duration-200",
-                    moreOpen && "rotate-180"
+                    moreOpen && "rotate-180",
                   )}
                   aria-hidden
                 />
@@ -147,7 +163,7 @@ export default function Navbar() {
                     aria-label="Open menu"
                     className={cn(
                       props.className,
-                      "lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-md text-white hover:bg-white/10 transition-colors"
+                      "lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-md text-white hover:bg-white/10 transition-colors",
                     )}
                   >
                     <Menu className="w-6 h-6" />
@@ -182,7 +198,7 @@ export default function Navbar() {
                         <ChevronDown
                           className={cn(
                             "size-5 transition-transform",
-                            mobileMoreOpen && "rotate-180"
+                            mobileMoreOpen && "rotate-180",
                           )}
                         />
                       </button>
