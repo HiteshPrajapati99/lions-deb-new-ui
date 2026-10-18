@@ -71,13 +71,33 @@ export type FetchLionsDenVideosOptions = {
   excludeShorts?: boolean;
 };
 
+export function sortVideosShortsLast(
+  list: YoutubeFeedVideo[],
+): YoutubeFeedVideo[] {
+  return [...list].sort((a, b) => {
+    if (a.isShort && !b.isShort) return 1;
+    if (!a.isShort && b.isShort) return -1;
+    return 0;
+  });
+}
+
+export function pickFeaturedVideos(
+  list: YoutubeFeedVideo[],
+  limit: number,
+): YoutubeFeedVideo[] {
+  const sorted = sortVideosShortsLast(list);
+  // if (options?.excludeShorts) {
+  //   sorted = sorted.filter((v) => !v.isShort);
+  // }
+  return sorted.slice(0, limit);
+}
+
+/** Used at build time (Node) to refresh `public/youtube-feed.json`. */
 export async function fetchLionsDenRecentVideos(
   limit = 8,
-  options?: FetchLionsDenVideosOptions,
 ): Promise<YoutubeFeedVideo[]> {
   const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${LIONS_DEN_CHANNEL_ID}`;
   const res = await fetch(url, {
-    next: { revalidate: 3600 },
     headers: {
       "User-Agent": "Mozilla/5.0 (compatible; LionsDenWebsite/1.0)",
     },
@@ -88,15 +108,6 @@ export async function fetchLionsDenRecentVideos(
   const xml = await res.text();
   const list = parseFeedEntries(xml);
 
-  // return sorted list if isShort then it should be at the end
-  const sortedList = list.sort((a, b) => {
-    if (a.isShort && !b.isShort) return 1;
-    if (!a.isShort && b.isShort) return -1;
-    return 0;
-  });
-  // if (options?.excludeShorts) {
-  //   list = list.filter((v) => !v.isShort);
-
-  // }
+  const sortedList = sortVideosShortsLast(list);
   return sortedList.slice(0, limit);
 }

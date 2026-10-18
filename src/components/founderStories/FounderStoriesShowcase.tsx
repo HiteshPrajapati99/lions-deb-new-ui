@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
-import { Playfair_Display } from "next/font/google";
 import {
   Building2,
   ChevronDown,
@@ -17,12 +15,6 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
-});
 
 const heroStats = [
   { value: "6 Success Stories", label: "Total Founders", icon: Users, iconWrap: "text-[#D4AF37]" },
@@ -202,8 +194,7 @@ export default function FounderStoriesShowcase() {
         <div className="mx-auto max-w-[1100px] text-center">
           <h1
             className={cn(
-              playfair.className,
-              "text-4xl font-semibold tracking-tight text-black sm:text-5xl lg:text-[2.75rem] lg:leading-[1.15]"
+              "font-playfair text-4xl font-semibold tracking-tight text-black sm:text-5xl lg:text-[2.75rem] lg:leading-[1.15]",
             )}
           >
             Founder Success Stories
@@ -276,12 +267,10 @@ export default function FounderStoriesShowcase() {
                 Season 01
               </span>
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100">
-                <Image
+                <img
                   src={`https://picsum.photos/seed/ldfounder${f.imageSeed}/800/600`}
                   alt=""
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
               <div className="flex flex-1 flex-col p-5">
@@ -335,7 +324,7 @@ export default function FounderStoriesShowcase() {
             <div className="mb-5 inline-flex rounded-xl bg-[#D4AF37]/15 p-3 text-[#D4AF37]">
               <PenLine className="size-7" strokeWidth={1.75} aria-hidden />
             </div>
-            <h2 className={cn(playfair.className, "text-2xl font-semibold text-black sm:text-3xl")}>
+            <h2 className={cn("font-playfair text-2xl font-semibold text-black sm:text-3xl")}>
               Share Your Success Story
             </h2>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#4F4F4F] sm:text-base">

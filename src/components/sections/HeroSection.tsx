@@ -1,9 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Playfair_Display } from "next/font/google";
 import { ArrowRight, Play, Sparkles, X } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,11 +13,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  display: "swap",
-});
+import { AppLink } from "@/lib/app-link";
 
 type HeroStat = { value: string; label: string };
 
@@ -41,14 +34,15 @@ const slides: HeroSlide[] = [
     subtitle: "Real Stories. Real Impact.",
     description:
       "Discover the untold stories of founders who made it. Learn from their failures, celebrate their victories, and get inspired to take the leap.",
-    primaryHref: "https://www.wavespb.com/links/SH15472JGP",
-    primaryLabel: "Watch Season 01",
+    primaryHref: "/start-your-journey",
+    primaryLabel: "Apply For Season 02",
     isNewWindow: false,
   },
   {
     id: "dreams-investment",
     titleLines: ["Where Dreams Meet Investment"],
     subtitle: "India's Premier Entrepreneurial Reality Show",
+    // subtitle: "4 Super Angles",
     description:
       "Watch passionate entrepreneurs pitch their groundbreaking ideas to seasoned business lions. Every pitch is a story. Every investment is a partnership.",
     primaryHref: "https://www.wavespb.com/links/SH15472JGP",
@@ -76,6 +70,7 @@ const slideStats: HeroStat[][] = [
   [
     { value: "500+", label: "Applicants" },
     { value: "₹15 Cr+", label: "Commitments" },
+    { value: "4", label: "Super Angels" },
   ],
   [
     { value: "500+", label: "Founders" },
@@ -126,17 +121,19 @@ function VideoHighlightCard({ className }: { className?: string }) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,107,53,0.12),transparent_55%),radial-gradient(circle_at_80%_80%,rgba(212,175,55,0.08),transparent_50%)]"
           aria-hidden
         />
-        <Image
-          src={thumbSrc}
-          alt=""
-          fill
-          sizes="(max-width: 1024px) 100vw, 420px"
-          className="object-cover object-center opacity-45"
-          aria-hidden
-          onError={() =>
-            setThumbSrc(youtubeThumbnailSrc(SEASON_01_HIGHLIGHT_VIDEO_ID, "hq"))
-          }
-        />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <img
+            src={thumbSrc}
+            alt=""
+            className="h-full w-full object-cover object-center opacity-45"
+            aria-hidden
+            onError={() =>
+              setThumbSrc(
+                youtubeThumbnailSrc(SEASON_01_HIGHLIGHT_VIDEO_ID, "hq"),
+              )
+            }
+          />
+        </div>
         <div className="absolute inset-0 bg-linear-to-t from-[#050A18]/90 via-[#050A18]/50 to-[#050A18]/30" />
 
         <div className="relative z-10 flex flex-col items-center gap-6 px-6">
@@ -217,10 +214,12 @@ function HeroSlidePanel({
   slide,
   stats,
   titleHeading: TitleTag = "h2",
+  showMeetTheLions = true,
 }: {
   slide: HeroSlide;
   stats: HeroStat[];
   titleHeading?: "h1" | "h2";
+  showMeetTheLions?: boolean;
 }) {
   return (
     <div className="flex flex-col">
@@ -237,8 +236,7 @@ function HeroSlidePanel({
 
       <TitleTag
         className={cn(
-          playfair.className,
-          "mb-4 text-[2rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-[2.75rem] xl:text-[3.25rem]",
+          "font-playfair mb-4 text-[2rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-[2.75rem] xl:text-[3.25rem]",
         )}
       >
         {slide.titleLines.map((line, i) => (
@@ -258,9 +256,10 @@ function HeroSlidePanel({
       </p>
 
       <div className="mb-11 flex flex-wrap items-center gap-3">
-        <Link
+        <AppLink
           href={slide.primaryHref}
-          target={slide.isNewWindow ? "_blank" : "_self"}
+          target={slide.isNewWindow ? "_blank" : undefined}
+          rel={slide.isNewWindow ? "noopener noreferrer" : undefined}
           className={cn(
             buttonVariants({ size: "lg" }),
             "h-11 gap-2 rounded-full border-transparent bg-[#FF6B35] px-7 text-white hover:bg-[#ff5a26]",
@@ -268,17 +267,19 @@ function HeroSlidePanel({
         >
           {slide.primaryLabel}
           <ArrowRight className="size-4" />
-        </Link>
-        <Link
-          href="/meet-the-lions"
-          className={cn(
-            buttonVariants({ variant: "outline", size: "lg" }),
-            "h-11 gap-2 rounded-full border-white/25 bg-[#0a1629]/90 px-7 text-white hover:bg-[#121f35] hover:text-white",
-          )}
-        >
-          Meet the Lions
-          <Sparkles className="size-4 text-white/90" />
-        </Link>
+        </AppLink>
+        {showMeetTheLions ? (
+          <AppLink
+            href="/meet-the-lions"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "h-11 gap-2 rounded-full border-white/25 bg-[#0a1629]/90 px-7 text-white hover:bg-[#121f35] hover:text-white",
+            )}
+          >
+            Meet the Lions
+            <Sparkles className="size-4 text-white/90" />
+          </AppLink>
+        ) : null}
       </div>
 
       <Separator className="mb-8 bg-white/10" />
@@ -288,8 +289,7 @@ function HeroSlidePanel({
           <div key={s.label} className="min-w-0">
             <dt
               className={cn(
-                playfair.className,
-                "mb-1 text-2xl font-semibold tracking-tight text-[#D4AF37] sm:text-3xl",
+                "font-playfair mb-1 text-2xl font-semibold tracking-tight text-[#D4AF37] sm:text-3xl",
               )}
             >
               {s.value}
@@ -320,6 +320,15 @@ export default function HeroSection() {
     };
   }, [api]);
 
+  React.useEffect(() => {
+    if (!api) return;
+    const intervalMs = 3000;
+    const id = window.setInterval(() => {
+      api.scrollNext();
+    }, intervalMs);
+    return () => window.clearInterval(id);
+  }, [api]);
+
   return (
     <section className="relative flex min-h-[90vh] flex-col justify-center overflow-hidden bg-[#050A18] text-white">
       <div
@@ -346,6 +355,7 @@ export default function HeroSection() {
                     slide={slide}
                     stats={slideStats[index]}
                     titleHeading={index === 0 ? "h1" : "h2"}
+                    showMeetTheLions={index >= 2}
                   />
                 </CarouselItem>
               ))}

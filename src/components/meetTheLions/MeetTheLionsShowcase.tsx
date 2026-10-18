@@ -1,237 +1,187 @@
 "use client";
 
-import * as React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Playfair_Display } from "next/font/google";
-import {
-  BarChart3,
-  Briefcase,
-  ChevronDown,
-  IndianRupee,
-  PanelTop,
-  Users,
-  User,
-} from "lucide-react";
+import type { ReactNode } from "react";
+// import {
+//   BarChart3,
+//   Briefcase,
+//   IndianRupee,
+//   PanelTop,
+//   Users,
+// } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
-});
+import lion1 from "@/assets/meet-lions/1.png";
+import lion2 from "@/assets/meet-lions/2..png";
+import lion3 from "@/assets/meet-lions/3.png";
+import lion4 from "@/assets/meet-lions/4.png";
+import lion5 from "@/assets/meet-lions/5.png";
 
 const GOLD = "#D4AF37";
 
-const filterCategories = [
-  "All",
-  "Technology",
-  "SaaS",
-  "AI/ML",
-  "Fintech",
-  "E-commerce",
-  "Consumer Brands",
-  "D2C",
-  "Marketing",
-  "Retail",
-  "Fashion",
-  "Manufacturing",
-  "Supply Chain",
-  "Logistics",
-  "Industrial Tech",
-  "Operations",
-  "Healthcare",
-  "Biotech",
-  "MedTech",
-  "Social Impact",
-  "Web3",
-  "Banking",
-  "Payments",
-  "Blockchain",
-  "Investment",
-] as const;
-
-type Lion = {
-  name: string;
-  title: string;
-  tags: readonly string[];
-  investments: number;
-  successRate: string;
-  netWorth: string;
-  quote: string;
-  imageSeed: number;
-  /** Verbatim from design (Investment Philosophy → Investment Criteria). */
-  investmentCriteria: string;
-};
-
-const lions: Lion[] = [
+/** Copy from src/assets/meet-lions/content,txt — Title, Sub Heading, LOGO, Description only. */
+const meetTheLionsContent = [
   {
-    name: "Rajesh Mehta",
-    title: "Tech Visionary & Serial Entrepreneur",
-    tags: ["Technology", "SaaS", "AI/ML"],
-    investments: 47,
-    successRate: "78%",
-    netWorth: "₹850 Cr",
-    quote:
-      "Great businesses are built on solving real problems, not chasing trends.",
-    imageSeed: 501,
-    investmentCriteria:
-      "Focus on scalable tech with strong unit economics and clear profitability path.",
+    title: "Dipak Sanghavi",
+    subHeading: "Managing Director and CEO , Nilon's India",
+    logoSrc: lion1,
+    description: `From 1962, Nilon's Enterprises has come a long way, to be India's fastest growing Processed Food Manufacturer; under the leadership and guidance of a young, dynamic Managing Director and CEO, Mr. Dipak Sanghavi.
+Mr. Sanghavi - a Polymer Engineer with a Leadership course from IIM-A took the reins of the company at the mere age of 24 yrs. With his vision, dedication, focus and sharp strategies, he along with his team, led the company from Rs.8 Cr to more than Rs.450 Cr within a decade and a half.
+Under his guidance, Nilon's has built itself from a pickle company to a food solution company and is presently placed between Number 1 to 3 on a national scale in almost 8 categories. His passion for food has made him deliver the finest recipes to the consumers not just in India but across the global diaspora. The company now boasts of three large state-of-the-art manufacturing plants on a global scale.
+Today, Nilon's has become a professionally driven, data-centric, global scale business, yet carefully bound by the spirit of entrepreneurship along with its spirit to deliver love and passion along with its products.
+He strongly believes that "Don't enter the business with the thought that you own it. Learn from those around you. You can turn your ambitions into reality only if you take people along. The most important ingredient for a successful business is to put the right people on top. Once you have that, the rest falls into place."`,
   },
   {
-    name: "Priya Sharma",
-    title: "Consumer Brand Expert & Marketing Maven",
-    tags: ["Consumer Brands", "D2C", "Marketing"],
-    investments: 38,
-    successRate: "82%",
-    netWorth: "₹620 Cr",
-    quote:
-      "Brands start with hearts, win markets. Authenticity is non-negotiable.",
-    imageSeed: 502,
-    investmentCriteria:
-      "Emotional brand connection, repeat purchase behavior, and authentic storytelling.",
+    title: "Dr. Poonam Gupta OBE",
+    subHeading: "Founder & CEO, PG Paper Limited, UK.",
+    logoSrc: lion2,
+    description: `Dr Poonam Gupta OBE is a leading UK entrepreneur and CEO of one of Scotland's most successful export businesses, PG Paper. Her portfolio of companies now has an annual turnover of circa $100 million, operating in over 60 countries, with offices in India, the US, China, Sweden, Turkey, and the United Arab Emirates.
+With a career-long interest in strengthening and enabling greater collaboration between Scotland and India; Poonam led a successful Scottish Chambers Task Force to India in 2019. She has been recognised as one of the '100 Most Influential in UK-India Relations' by India Inc Group. Poonam is currently Vice President of the Scottish Chambers of Commerce and Chair of the Manufacturing Sector Committee of the FICCI UK Council, the largest and oldest apex business organisation in India.
+Poonam's entrepreneurial and business efforts have also been acknowledged by her peer group and the industry at large; for which she has received several business awards, most recently Ernst & Young's 'Entrepreneur of the Year' in 2019. In recognition for her service to charity and business, she was awarded the Order of the British Empire (OBE) in the Queen's New Year Honours List in 2016.
+Poonam is a benefactor of a number of local, national and international charities; with a particular focus on woman-centric issues, disadvantaged children, gender equality and animal conservation. Since January 2021, Poonam has also been an Ambassador for Young Enterprise Scotland.`,
   },
   {
-    name: "Vikram Singh",
-    title: "Manufacturing Mogul & Operations Specialist",
-    tags: ["Manufacturing", "Supply Chain", "Logistics"],
-    investments: 32,
-    successRate: "75%",
-    netWorth: "₹1200 Cr",
-    quote: "Excellence in execution beats brilliant ideas every single time.",
-    imageSeed: 503,
-    investmentCriteria:
-      "Operational excellence, efficient supply chains, and manufacturing discipline.",
+    title: "Gaurav VK Singhvi",
+    subHeading: "Founder, GS Ventures",
+    logoSrc: lion3,
+    description: `Founded by serial entrepreneur and investor Gaurav VK Singhvi, Gaurav Singhvi Ventures emerged from two decades of business networking expertise since 2004.
+Beginning his investment journey in 2016 with his first investment in DSYH, Gaurav identified the need to democratise entrepreneurship across India's untapped markets.
+Operating as a family office with a sector-agnostic approach, we follow our "From Seed to Success" philosophy. Beyond investing, we've built a complete ecosystem, including co-working spaces, financial advisory services, and a comprehensive business support infrastructure.
+Based in Surat with pan-India reach, we support entrepreneurs "from every corner of India," combining investment expertise with hands-on mentorship for sustainable startup success.`,
+  },
+  {
+    title: "Mr. Jay Ukani",
+    subHeading: "MD, Ban Labs Pvt Ltd",
+    logoSrc: lion4,
+    description: `Jay Ukani is the Director and Owner of Ban Labs Private Limited, a prominent Indian pharmaceutical and consumer goods company. Based in Rajkot, Gujarat, he is recognized as a visionary entrepreneur and venture capitalist who has significantly expanded his family's 60-year-old legacy
+
+Professional Role at Ban Labs
+● Leadership: Jay joined the company as a Director in 2018 and has since diversified its interests beyond traditional pharmaceuticals into sectors like energy, petroleum, fragrance, and textiles.
+● Global Presence: Under his leadership, Ban Labs now impacts lives in over 40 countries, maintaining strict quality standards that blend tradition with science.
+● Venture Capital & Investments
+Beyond his corporate role, Jay Ukani is a prolific investor:
+● Startup Portfolio: He has invested in over 170 startups across 5 continents and 23 countries.`,
+  },
+  {
+    title: "Vinita Surana",
+    subHeading: "Executive Director, Surana Group of Companies",
+    logoSrc: lion5,
+    description: `Vinita Surana is the Executive Director of the Surana Group of Companies, a diversified business empire headquartered in Hyderabad with interests in solar energy, real estate, and copper. She is notably the first woman to take an active board seat in the Surana Group, representing a significant shift in the leadership of the family-run enterprise.
+Professional Roles & Ventures
+Beyond her leadership at the Surana Group, she is a prominent figure in the Indian startup and investment ecosystem:
+Founder of VinSpace: A collaborative co-working hub for startups located in the heart of Hyderabad, designed to foster innovation and provide mentorship.
+● Vinvinsituation Venture Fund: As the founding partner, she actively invests in and accelerates the growth of innovative startups.`,
   },
 ];
 
-type PhilosophyTabId =
-  | "investmentCriteria"
-  | "dealBreakers"
-  | "founderQualities"
-  | "postInvestmentSupport";
-
-const philosophyTabs: { id: PhilosophyTabId; label: string }[] = [
-  { id: "investmentCriteria", label: "Investment Criteria" },
-  { id: "dealBreakers", label: "Deal Breakers" },
-  { id: "founderQualities", label: "Founder Qualities" },
-  { id: "postInvestmentSupport", label: "Post-Investment Support" },
-];
-
-function matchesFilter(selected: string, tags: readonly string[]) {
-  if (selected === "All") return true;
-  return tags.some((t) => t === selected);
+function SectionLabel({ children }: { children: ReactNode }) {
+  return (
+    <p
+      className="text-xs font-semibold uppercase tracking-[0.2em]"
+      style={{ color: GOLD }}
+    >
+      {children}
+    </p>
+  );
 }
 
-function LionCard({ L }: { L: Lion }) {
-  const [open, setOpen] = React.useState(false);
+type LionItem = (typeof meetTheLionsContent)[number];
+
+function LionSpotlightCard({ item, index }: { item: LionItem; index: number }) {
+  const isEven = index % 2 === 0;
+  const order = String(index + 1).padStart(2, "0");
 
   return (
-    <article
-      className={cn(
-        "flex w-full max-w-[380px] flex-col overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-[0_12px_40px_-18px_rgba(15,23,42,0.15)]",
-        "mx-auto sm:max-w-none",
-      )}
-    >
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-900">
-        <Image
-          src={`https://picsum.photos/seed/ldlion${L.imageSeed}/640/800`}
-          alt={`${L.name}, investor portrait`}
-          fill
-          className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 33vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-4 pt-12">
+    <article className="group relative overflow-hidden rounded-3xl border border-white/[0.12] shadow-[0_28px_80px_-32px_rgba(0,0,0,0.75)] transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_36px_90px_-28px_rgba(0,0,0,0.82)]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/55 to-transparent" />
+      <div className="grid lg:grid-cols-12">
+        <div
+          className={cn(
+            "relative flex min-h-[260px] items-center justify-center bg-gradient-to-br from-[#1a2d45] via-[#102038] to-[#0a192f] px-8 py-12 sm:min-h-[300px] sm:px-10 sm:py-14 lg:col-span-5",
+            "border-white/10",
+            isEven
+              ? "border-b lg:border-b-0 lg:border-r"
+              : "border-b lg:border-b-0 lg:border-l lg:order-2",
+          )}
+        >
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20% 30%, #d4af37 0%, transparent 45%), radial-gradient(circle at 80% 70%, #3b82f6 0%, transparent 40%)",
+            }}
+          />
+          <div className="relative w-full max-w-[20rem] sm:max-w-[22rem]">
+            <div
+              className={cn(
+                "rounded-2xl border border-[#d4af37]/25 bg-[#050a14]/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-[2px]",
+                "transition-[border-color,box-shadow] duration-500 ease-out group-hover:border-[#d4af37]/45 group-hover:shadow-[0_20px_50px_-20px_rgba(212,175,55,0.15)]",
+              )}
+            >
+              <img
+                src={item.logoSrc}
+                alt={`${item.title}`}
+                className="mx-auto  max-h-[min(320px,52vw)] w-full object-contain object-center transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.04]"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={cn(
+            "relative bg-white px-6 py-10 sm:px-9 sm:py-11 lg:col-span-7 lg:py-14 lg:pl-11 lg:pr-14",
+            !isEven && "lg:order-1",
+          )}
+        >
+          <div
+            aria-hidden
+            className="absolute left-0 top-12 hidden w-[3px] rounded-full lg:block"
+            style={{
+              height: "6.5rem",
+              background: `linear-gradient(180deg, ${GOLD}, rgba(212,175,55,0.25))`,
+            }}
+          />
+
+          <div className="flex flex-wrap items-center gap-3">
+            <span
+              className="inline-flex min-h-[2.25rem] min-w-[2.75rem] items-center justify-center rounded-lg border border-neutral-200/90 bg-neutral-50 px-2.5 font-mono text-sm font-bold tabular-nums text-neutral-800"
+              style={{ boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.06)" }}
+            >
+              {order}
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-neutral-400">
+              Panel member
+            </span>
+          </div>
+
           <h3
             className={cn(
-              playfair.className,
-              "text-xl font-bold text-white sm:text-2xl",
+              "font-playfair mt-5 text-2xl font-semibold tracking-tight text-neutral-950 sm:text-3xl",
             )}
           >
-            {L.name}
+            {item.title}
           </h3>
-          <p className="mt-1 text-sm font-semibold" style={{ color: GOLD }}>
-            {L.title}
+          <p
+            className={cn(
+              "mt-2 max-w-xl text-base font-semibold leading-snug sm:text-lg",
+            )}
+            style={{ color: GOLD }}
+          >
+            {item.subHeading}
           </p>
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex flex-wrap gap-2">
-          {L.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-800"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <dl className="mt-4 grid grid-cols-3 gap-2 border-y border-neutral-100 py-4 text-center">
-          <div>
-            <dt className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500">
-              Investments
-            </dt>
-            <dd
-              className="mt-1 text-lg font-bold tabular-nums"
-              style={{ color: GOLD }}
-            >
-              {L.investments}
-            </dd>
+
+          <div className="mt-8 space-y-4 border-t border-neutral-100 pt-8 text-sm leading-[1.7] text-neutral-600 sm:text-[15px]">
+            {item.description.split("\n").map((paragraph, pi) =>
+              paragraph.trim() ? (
+                <p
+                  key={`${item.title}-${pi}`}
+                  className="whitespace-pre-wrap first:text-[15px] first:leading-relaxed first:text-neutral-700 sm:first:text-base"
+                >
+                  {paragraph}
+                </p>
+              ) : null,
+            )}
           </div>
-          <div>
-            <dt className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500">
-              Success Rate
-            </dt>
-            <dd
-              className="mt-1 text-lg font-bold tabular-nums"
-              style={{ color: GOLD }}
-            >
-              {L.successRate}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500">
-              Net Worth
-            </dt>
-            <dd
-              className="mt-1 text-lg font-bold tabular-nums"
-              style={{ color: GOLD }}
-            >
-              {L.netWorth}
-            </dd>
-          </div>
-        </dl>
-        <p className="mt-4 flex-1 text-sm italic leading-relaxed text-neutral-600">
-          &ldquo;{L.quote}&rdquo;
-        </p>
-        <div className="mt-5 space-y-3">
-          <button
-            type="button"
-            onClick={() => setOpen((o) => !o)}
-            className="flex w-full items-center justify-center gap-1 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm font-semibold text-neutral-800 transition-colors hover:bg-neutral-50"
-            aria-expanded={open}
-          >
-            Show More
-            <ChevronDown
-              className={cn(
-                "size-4 transition-transform",
-                open && "rotate-180",
-              )}
-            />
-          </button>
-          {open ? (
-            <p className="rounded-lg bg-neutral-50 px-3 py-2 text-xs leading-relaxed text-neutral-600">
-              {L.investmentCriteria}
-            </p>
-          ) : null}
-          <Link
-            href="/pitch-your-idea"
-            className="flex w-full items-center justify-center rounded-lg py-3 text-sm font-bold text-[#1a1a1a] transition-opacity hover:opacity-90"
-            style={{ backgroundColor: GOLD }}
-          >
-            View Full Profile
-          </Link>
         </div>
       </div>
     </article>
@@ -239,21 +189,9 @@ function LionCard({ L }: { L: Lion }) {
 }
 
 export default function MeetTheLionsShowcase() {
-  const [filter, setFilter] = React.useState<string>("All");
-  const [philosophyTab, setPhilosophyTab] =
-    React.useState<PhilosophyTabId>("investmentCriteria");
-
-  const filteredLions = React.useMemo(
-    () => lions.filter((L) => matchesFilter(filter, L.tags)),
-    [filter],
-  );
-
-  const row1 = filteredLions.slice(0, 3);
-  const row2 = filteredLions.slice(3);
-
   return (
     <>
-      <section
+      {/* <section
         className="relative overflow-hidden pb-28 pt-24 sm:pt-28"
         style={{
           background: "linear-gradient(180deg, #0a192f 0%, #050a14 100%)",
@@ -269,8 +207,7 @@ export default function MeetTheLionsShowcase() {
           </p>
           <h1
             className={cn(
-              playfair.className,
-              "mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl",
+              "font-playfair mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl",
             )}
           >
             Meet the Lions
@@ -348,166 +285,49 @@ export default function MeetTheLionsShowcase() {
             </p>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section className="bg-white px-4 pb-16 pt-8 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-[1100px] text-center">
-          <h2
-            className={cn(
-              playfair.className,
-              "text-3xl font-semibold text-neutral-900 sm:text-4xl",
-            )}
-          >
-            Our Investment Panel
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-neutral-600">
-            Filter by expertise to find the right lion for your venture.
-          </p>
-        </div>
-        <div className="mx-auto mt-8 flex max-w-[1200px] flex-wrap justify-center gap-2 sm:gap-2.5">
-          {filterCategories.map((cat) => {
-            const active = filter === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setFilter(cat)}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-                  active
-                    ? "text-white shadow-sm"
-                    : "bg-neutral-100 text-neutral-800 hover:bg-neutral-200/80",
-                )}
-                style={active ? { backgroundColor: GOLD } : undefined}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
+      <section className="mt-10 relative overflow-hidden border-t border-white/[0.08] pb-[4.75rem] pt-14 sm:pb-28 sm:pt-[4.75rem]">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, #050a14 0%, #0a192f 42%, #0d1b2e 72%, #0a1524 100%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-28 left-[10%] h-72 w-72 rounded-full bg-[#d4af37]/[0.07] blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 right-[-5%] h-80 w-80 rounded-full bg-[#1e3a5f]/40 blur-3xl"
+        />
 
-        {filteredLions.length === 0 ? (
-          <p className="mx-auto mt-12 text-center text-neutral-600">
-            No lions match this filter. Try &quot;All&quot; or another
-            expertise.
-          </p>
-        ) : (
-          <>
-            <div className="mx-auto mt-12 grid max-w-[1200px] grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-              {row1.map((L) => (
-                <LionCard key={L.name} L={L} />
-              ))}
-            </div>
-            {row2.length > 0 ? (
-              <div className="mx-auto mt-8 flex max-w-[1200px] flex-wrap justify-center gap-8 lg:gap-10">
-                {row2.map((L) => (
-                  <LionCard key={L.name} L={L} />
-                ))}
-              </div>
-            ) : null}
-          </>
-        )}
-      </section>
-
-      <section className="bg-neutral-50 px-4 py-16 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-[1200px] overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-[0_24px_60px_-24px_rgba(15,23,42,0.2)]">
-          <div
-            className="px-6 py-8 text-center sm:px-10"
-            style={{ backgroundColor: GOLD }}
-          >
+        <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-10">
+          <div className="mx-auto max-w-[46rem] text-center">
+            <SectionLabel>Investment panel</SectionLabel>
             <h2
               className={cn(
-                playfair.className,
-                "text-2xl font-semibold text-white sm:text-3xl",
+                "font-playfair mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl",
               )}
             >
-              Investment Philosophy Comparison
+              The lions behind the den Season 01
             </h2>
-            <p className="mx-auto mt-2 max-w-2xl text-sm text-white/95 sm:text-base">
-              Compare investment approaches across our panel of lions.
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
+              Founders, operators, and investors who bring capital, networks,
+              and decades of building real businesses to every conversation.
             </p>
+            <div className="mx-auto mt-8 h-px max-w-xs bg-gradient-to-r from-transparent via-white/25 to-transparent" />
           </div>
-          <div className="border-b border-neutral-100 bg-white px-4 py-4 sm:px-6">
-            <div
-              className="mx-auto flex max-w-[900px] flex-wrap justify-center gap-2"
-              role="tablist"
-              aria-label="Philosophy comparison"
-            >
-              {philosophyTabs.map((tab) => {
-                const active = philosophyTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setPhilosophyTab(tab.id)}
-                    className={cn(
-                      "rounded-full px-4 py-2 text-xs font-bold transition-colors sm:text-sm",
-                      active
-                        ? "shadow-sm"
-                        : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200/80",
-                    )}
-                    style={
-                      active
-                        ? { backgroundColor: GOLD, color: "#fff" }
-                        : undefined
-                    }
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <div className="grid gap-4 bg-white p-6 sm:grid-cols-2 lg:grid-cols-3 sm:p-8 lg:gap-6">
-            {lions.map((L) => (
-              <div
-                key={L.name}
-                className="flex gap-3 rounded-xl border border-sky-100 bg-sky-50/80 p-4 shadow-[0_1px_0_rgba(15,23,42,0.04)]"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-800">
-                  <User className="size-5" aria-hidden />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-neutral-900">{L.name}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-neutral-700">
-                    {philosophyTab === "investmentCriteria"
-                      ? L.investmentCriteria
-                      : "Full details for this lens are provided during the founder application process."}
-                  </p>
-                </div>
-              </div>
+
+          <div className="mx-auto mt-14 flex max-w-[1100px] flex-col gap-12 sm:mt-16 sm:gap-14 lg:gap-16">
+            {meetTheLionsContent.map((item, index) => (
+              <LionSpotlightCard key={item.title} item={item} index={index} />
             ))}
           </div>
         </div>
-      </section>
-
-      <section
-        className="px-4 py-16 text-center sm:px-6 lg:px-10"
-        style={{
-          background:
-            "linear-gradient(135deg, #d4af37 0%, #c9a227 50%, #b8860b 100%)",
-        }}
-      >
-        <h2
-          className={cn(
-            playfair.className,
-            "text-3xl font-semibold text-white sm:text-4xl",
-          )}
-        >
-          Ready to Pitch to Our Lions?
-        </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/95 sm:text-lg">
-          Join hundreds of entrepreneurs who have transformed their ideas into
-          successful businesses with our support.
-        </p>
-        <Link
-          href="/pitch-your-idea"
-          className="mt-8 inline-flex items-center justify-center rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-neutral-900 shadow-md transition-opacity hover:opacity-95"
-        >
-          Start Your Application →
-        </Link>
       </section>
     </>
   );

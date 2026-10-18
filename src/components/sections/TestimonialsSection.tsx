@@ -1,12 +1,5 @@
-import Image from "next/image";
-import { Playfair_Display } from "next/font/google";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  display: "swap",
-});
 
 interface SocialPostProps {
   name: string;
@@ -17,12 +10,23 @@ interface SocialPostProps {
   image?: string;
 }
 
-function SocialPost({ name, handle, avatar, text, time, image }: SocialPostProps) {
+function SocialPost({
+  name,
+  handle,
+  avatar,
+  text,
+  time,
+  image,
+}: SocialPostProps) {
   return (
     <article className="mb-4 break-inside-avoid rounded-[10px] border border-gray-200/80 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-start gap-3">
         <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-100">
-          <Image src={avatar} alt="" fill sizes="40px" className="object-cover" />
+          <img
+            src={avatar}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold text-gray-900">{name}</p>
@@ -32,17 +36,30 @@ function SocialPost({ name, handle, avatar, text, time, image }: SocialPostProps
       <p className="text-sm leading-relaxed text-gray-700">{text}</p>
       {image && (
         <div className="relative mt-3 aspect-video overflow-hidden rounded-lg bg-gray-100">
-          <Image src={image} alt="" fill sizes="(max-width: 400px) 100vw, 400px" className="object-cover" />
+          <img
+            src={image}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
         </div>
       )}
       <div className="mt-3 flex items-center gap-5 border-t border-gray-100 pt-3 text-gray-400">
-        <button type="button" className="flex items-center gap-1.5 text-xs hover:text-[#F26522]">
+        <button
+          type="button"
+          className="flex items-center gap-1.5 text-xs hover:text-[#F26522]"
+        >
           <MessageCircle className="h-3.5 w-3.5" />
         </button>
-        <button type="button" className="flex items-center gap-1.5 text-xs hover:text-[#F26522]">
+        <button
+          type="button"
+          className="flex items-center gap-1.5 text-xs hover:text-[#F26522]"
+        >
           <Repeat2 className="h-3.5 w-3.5" />
         </button>
-        <button type="button" className="flex items-center gap-1.5 text-xs hover:text-[#F26522]">
+        <button
+          type="button"
+          className="flex items-center gap-1.5 text-xs hover:text-[#F26522]"
+        >
           <Heart className="h-3.5 w-3.5" />
         </button>
         <span className="ml-auto text-[10px] text-gray-400">{time}</span>
@@ -105,8 +122,7 @@ export default function TestimonialsSection() {
         <div className="mb-10 text-center">
           <h2
             className={cn(
-              playfair.className,
-              "mb-3 text-3xl font-semibold tracking-tight text-[#0B1B32] sm:text-4xl"
+              "font-playfair mb-3 text-3xl font-semibold tracking-tight text-[#0B1B32] sm:text-4xl",
             )}
           >
             What People Are Saying

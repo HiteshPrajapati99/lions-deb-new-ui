@@ -1,21 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { Menu, ChevronDown } from "lucide-react";
-import { Playfair_Display } from "next/font/google";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["700"],
-  display: "swap",
-});
+import { AppLink } from "@/lib/app-link";
+import { useNavigate } from "react-router-dom";
 
 const mainNavLinks = [
   { label: "Home", href: "/" },
-  { label: "Season 01", href: "/season-01" },
+  { label: "Season 01", href: "/season" },
   // { label: "Founder Stories", href: "/founder-stories" },
   { label: "Meet the Lions", href: "/meet-the-lions" },
 ] as const;
@@ -26,7 +20,7 @@ const moreLinks = [
 ] as const;
 
 const NAV_LINK_CLASS =
-  "text-white text-sm font-medium px-3 py-2 rounded-md transition-colors hover:bg-white/10";
+  "text-black font-medium px-3 py-2 rounded-md transition-colors hover:bg-white/10";
 
 function BrandMark({
   showTaglineOnMobile = false,
@@ -38,11 +32,11 @@ function BrandMark({
     : "hidden sm:flex flex-col pt-0.5";
 
   return (
-    <Link href="/" className="flex items-start gap-3 min-w-0">
+    <AppLink href="/" className="flex items-start gap-3 min-w-0">
       <div
         className={cn(
           "shrink-0 w-10 h-10 rounded-md bg-[#d4af37] flex items-center justify-center",
-          playfair.className,
+          "font-playfair",
         )}
       >
         <span className="text-white text-sm font-bold leading-none tracking-tight">
@@ -53,7 +47,7 @@ function BrandMark({
         <span
           className={cn(
             "text-white text-lg font-bold leading-tight block",
-            playfair.className,
+            "font-playfair",
           )}
         >
           Lions Den
@@ -62,7 +56,7 @@ function BrandMark({
           Where Dreams Meet Investment
         </span>
       </div>
-    </Link>
+    </AppLink>
   );
 }
 
@@ -71,6 +65,7 @@ export default function Navbar() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const moreWrapRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!moreOpen) return;
@@ -87,19 +82,30 @@ export default function Navbar() {
   }, [moreOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a192f] border-b border-gray-700/35">
+    <header className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-700/35">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between gap-4 min-h-[4.25rem] py-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:justify-normal">
           <div className="lg:justify-self-start shrink-0 min-w-0">
-            <BrandMark />
+            {/* <BrandMark /> */}
+            <img
+              src={"/logo.jpeg"}
+              alt="Lions Den"
+              className="object-cover object-center w-28 h-16"
+              
+              onClick={() => navigate("/")}
+            />
           </div>
 
           {/* Desktop navigation */}
           <nav className="hidden lg:flex items-center gap-2 xl:gap-5 lg:justify-self-center">
             {mainNavLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={NAV_LINK_CLASS}>
+              <AppLink
+                key={link.href}
+                href={link.href}
+                className={NAV_LINK_CLASS}
+              >
                 {link.label}
-              </Link>
+              </AppLink>
             ))}
             <div ref={moreWrapRef} className="relative flex items-center">
               <button
@@ -116,7 +122,7 @@ export default function Navbar() {
                 More
                 <ChevronDown
                   className={cn(
-                    "size-4 shrink-0 text-white transition-transform duration-200",
+                    "size-4 shrink-0 text-black transition-transform duration-200",
                     moreOpen && "rotate-180",
                   )}
                   aria-hidden
@@ -128,7 +134,7 @@ export default function Navbar() {
                   role="menu"
                 >
                   {moreLinks.map((item) => (
-                    <Link
+                    <AppLink
                       key={item.href}
                       href={item.href}
                       role="menuitem"
@@ -136,7 +142,7 @@ export default function Navbar() {
                       onClick={() => setMoreOpen(false)}
                     >
                       {item.label}
-                    </Link>
+                    </AppLink>
                   ))}
                 </div>
               ) : null}
@@ -145,12 +151,12 @@ export default function Navbar() {
 
           <div className="lg:justify-self-end flex items-center gap-3">
             <div className="hidden lg:flex">
-              <Link
+              <AppLink
                 href="/start-your-journey"
-                className="inline-flex items-center justify-center rounded-lg bg-[#ff7043] hover:bg-[#f4511e] text-white font-bold text-sm px-6 py-2.5 whitespace-nowrap transition-colors duration-200"
+                 className="group inline-flex h-13 items-center gap-3 rounded-full bg-linear-to-r from-[#F5C97A] to-[#E8A548] px-8 text-base font-semibold text-[#1A1206] shadow-[0_10px_30px_-10px_rgba(232,176,79,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_-10px_rgba(232,176,79,0.9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8B04F] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050A18]"
               >
-                Start Your Journey
-              </Link>
+                Apply for season 2
+              </AppLink>
             </div>
 
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -178,14 +184,14 @@ export default function Navbar() {
                   <BrandMark showTaglineOnMobile />
                   <nav className="flex flex-col gap-0 border-t border-gray-700/50 pt-6">
                     {mainNavLinks.map((link) => (
-                      <Link
+                      <AppLink
                         key={link.href}
                         href={link.href}
                         onClick={() => setMobileOpen(false)}
                         className="text-white py-3.5 px-3 text-base font-medium border-b border-gray-700/35 hover:bg-white/5 rounded-md transition-colors"
                       >
                         {link.label}
-                      </Link>
+                      </AppLink>
                     ))}
                     <div className="border-b border-gray-700/35">
                       <button
@@ -205,26 +211,26 @@ export default function Navbar() {
                       {mobileMoreOpen ? (
                         <div className="pb-3 pl-2 space-y-1">
                           {moreLinks.map((item) => (
-                            <Link
+                            <AppLink
                               key={item.href}
                               href={item.href}
                               onClick={() => setMobileOpen(false)}
                               className="block py-2.5 px-3 text-[#94a3b8] text-sm font-medium rounded-md hover:text-white hover:bg-white/10"
                             >
                               {item.label}
-                            </Link>
+                            </AppLink>
                           ))}
                         </div>
                       ) : null}
                     </div>
                   </nav>
-                  <Link
+                  <AppLink
                     href="/start-your-journey"
                     onClick={() => setMobileOpen(false)}
                     className="inline-flex items-center justify-center rounded-lg bg-[#ff7043] hover:bg-[#f4511e] text-white font-bold w-full py-4 text-base whitespace-nowrap transition-colors"
                   >
                     Start Your Journey
-                  </Link>
+                  </AppLink>
                 </div>
               </SheetContent>
             </Sheet>
