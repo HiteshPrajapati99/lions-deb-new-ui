@@ -21,6 +21,7 @@ import ApplicationGuideContent from "@/components/application-guide/ApplicationG
 // import MeetTheLionsShowcase from "@/components/meetTheLions/MeetTheLionsShowcase";
 import LionProfilePage from "@/components/meetTheLions/LionProfilePage";
 import Season01Showcase from "@/components/season01/Season01Showcase";
+import Season02ComingSoon from "@/components/season02/Season02ComingSoon";
 import FounderStoriesShowcase from "@/components/founderStories/FounderStoriesShowcase";
 import PartnerNetworkShowcase from "@/components/partnerNetwork/PartnerNetworkShowcase";
 import PressShowcase from "@/components/press/PressShowcase";
@@ -67,6 +68,16 @@ function Season01Page() {
     <>
       <Navbar />
       <Season01Showcase />
+      <Footer />
+    </>
+  );
+}
+
+function Season02Page() {
+  return (
+    <>
+      <Navbar />
+      <Season02ComingSoon />
       <Footer />
     </>
   );
@@ -139,6 +150,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/season" element={<Season01Page />} />
+        <Route path="/season-02" element={<Season02Page />} />
         <Route path="/founder-stories" element={<FounderStoriesPage />} />
         <Route path="/meet-the-lions" element={<MeetTheLionsPage />} />
         <Route path="/partner-network" element={<PartnerNetworkPage />} />

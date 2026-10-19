@@ -138,7 +138,7 @@ function FeaturedEpisode({ episode }: { episode: Episode }) {
               <Play className="ml-0.5 size-4" fill="currentColor" aria-hidden />
             </span>
             <span className="border-b border-[#0B1B32]/60 pb-1 text-sm font-semibold md:text-base text-[#0B1B32] transition-colors group-hover:border-[#C5A059] group-hover:text-[#B08A4F]">
-              Watch Episode
+              Watch Season 01
             </span>
             <ArrowRight
               className="size-4 text-[#0B1B32] transition-transform duration-300 group-hover:translate-x-1"

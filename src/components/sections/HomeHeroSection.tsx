@@ -23,12 +23,13 @@ const stats: HeroStat[] = [
 export default function HomeHeroSection() {
   return (
     <section className="relative flex min-h-[calc(100svh-4.25rem)] items-center overflow-hidden bg-[#050A18] text-white">
-      {/* Background image */}
+      {/* Background image: anchored top-right so object-cover only crops from
+          the left/bottom, keeping the image's top-right corner in view on every screen size */}
       <img
         src="/home.png"
         alt=""
         aria-hidden
-        className="absolute inset-0 h-full w-full object-cover object-[70%_center]"
+        className="absolute inset-0 h-full w-full object-cover object-[right_top]"
       />
       {/* Dark fade on the left so the text stays readable */}
       <div
@@ -80,7 +81,7 @@ export default function HomeHeroSection() {
               />
             </AppLink>
             <AppLink
-              href="/season"
+              href="/start-your-journey"
               className="group inline-flex h-11 items-center gap-2.5 rounded-full border border-white/40 bg-[#050A18]/40 pl-1.5 pr-5 text-sm font-medium text-white backdrop-blur-sm transition-colors duration-300 hover:border-[#E8B04F] hover:bg-[#050A18]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8B04F]"
             >
               <span className="flex size-8 items-center justify-center rounded-full bg-white text-[#050A18] transition-colors duration-300 group-hover:bg-[#E8B04F]">
@@ -90,7 +91,7 @@ export default function HomeHeroSection() {
                   aria-hidden
                 />
               </span>
-              Watch Season 2
+              Register your startup
             </AppLink>
           </div>
 

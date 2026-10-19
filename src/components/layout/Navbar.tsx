@@ -1,23 +1,37 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Menu, ChevronDown } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { AppLink } from "@/lib/app-link";
 import { useNavigate } from "react-router-dom";
 
-const mainNavLinks = [
+type NavLink = { label: string; href: string };
+/** An entry that opens a dropdown of links instead of navigating directly. */
+type NavGroup = { label: string; items: readonly NavLink[] };
+type NavEntry = NavLink | NavGroup;
+
+/** Shared by the desktop bar and the mobile sheet, rendered in this order. */
+const navEntries: readonly NavEntry[] = [
   { label: "Home", href: "/" },
-  { label: "Season 01", href: "/season" },
+  {
+    label: "Seasons",
+    items: [
+      { label: "Season 01", href: "/season" },
+      { label: "Season 02", href: "/season-02" },
+    ],
+  },
   // { label: "Founder Stories", href: "/founder-stories" },
   { label: "Meet the Lions", href: "/meet-the-lions" },
-] as const;
-
-const moreLinks = [
-  { label: "Partner Network", href: "/partner-network" },
-  { label: "Pitch Your Idea", href: "/start-your-journey" },
-] as const;
+  {
+    label: "More",
+    items: [
+      { label: "Partner Network", href: "/partner-network" },
+      { label: "Pitch Your Idea", href: "/start-your-journey" },
+    ],
+  },
+];
 
 const NAV_LINK_CLASS =
   "text-black font-medium px-3 py-2 rounded-md transition-colors hover:bg-white/10";
@@ -60,26 +74,120 @@ function BrandMark({
   );
 }
 
-export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
-  const moreWrapRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+/** Desktop dropdown: toggles on click; closes on outside click, Escape, or picking a link. */
+function DesktopNavDropdown({ label, items }: NavGroup) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
 
   useEffect(() => {
-    if (!moreOpen) return;
+    if (!open) return;
     const onDown = (e: MouseEvent) => {
-      if (
-        moreWrapRef.current &&
-        !moreWrapRef.current.contains(e.target as Node)
-      ) {
-        setMoreOpen(false);
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
       }
     };
     document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, [moreOpen]);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div ref={wrapRef} className="relative flex items-center">
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-expanded={open}
+        aria-controls={menuId}
+        onClick={() => setOpen((o) => !o)}
+        className={cn(
+          NAV_LINK_CLASS,
+          "inline-flex items-center gap-1 bg-transparent cursor-pointer",
+          open && "bg-white/10",
+        )}
+      >
+        {label}
+        <ChevronDown
+          className={cn(
+            "size-4 shrink-0 text-black transition-transform duration-200",
+            open && "rotate-180",
+          )}
+          aria-hidden
+        />
+      </button>
+      <div
+        id={menuId}
+        hidden={!open}
+        className="absolute left-1/2 top-full mt-2 -translate-x-1/2 min-w-[12.5rem] rounded-lg bg-white py-2 px-1 shadow-lg ring-1 ring-black/5 z-[60]"
+      >
+        {items.map((item) => (
+          <AppLink
+            key={item.href}
+            href={item.href}
+            className="block px-3 py-2.5 text-sm text-[#1f2937] rounded-md hover:bg-gray-100 transition-colors font-sans font-medium"
+            onClick={() => setOpen(false)}
+          >
+            {item.label}
+          </AppLink>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Mobile sheet group: expands in place to reveal its links. */
+function MobileNavGroup({
+  label,
+  items,
+  onNavigate,
+}: NavGroup & { onNavigate: () => void }) {
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+
+  return (
+    <div className="border-b border-gray-700/35">
+      <button
+        type="button"
+        className="flex w-full items-center justify-between text-white py-3.5 px-3 text-base font-medium hover:bg-white/5 rounded-md transition-colors"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={panelId}
+      >
+        {label}
+        <ChevronDown
+          className={cn("size-5 transition-transform", open && "rotate-180")}
+          aria-hidden
+        />
+      </button>
+      <div id={panelId} hidden={!open} className="pb-3 pl-2 space-y-1">
+        {items.map((item) => (
+          <AppLink
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className="block py-2.5 px-3 text-[#94a3b8] text-sm font-medium rounded-md hover:text-white hover:bg-white/10"
+          >
+            {item.label}
+          </AppLink>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-700/35">
@@ -98,55 +206,23 @@ export default function Navbar() {
 
           {/* Desktop navigation */}
           <nav className="hidden lg:flex items-center gap-2 xl:gap-5 lg:justify-self-center">
-            {mainNavLinks.map((link) => (
-              <AppLink
-                key={link.href}
-                href={link.href}
-                className={NAV_LINK_CLASS}
-              >
-                {link.label}
-              </AppLink>
-            ))}
-            <div ref={moreWrapRef} className="relative flex items-center">
-              <button
-                type="button"
-                aria-expanded={moreOpen}
-                aria-haspopup="true"
-                onClick={() => setMoreOpen((o) => !o)}
-                className={cn(
-                  NAV_LINK_CLASS,
-                  "inline-flex items-center gap-1 bg-transparent cursor-pointer",
-                  moreOpen && "bg-white/10",
-                )}
-              >
-                More
-                <ChevronDown
-                  className={cn(
-                    "size-4 shrink-0 text-black transition-transform duration-200",
-                    moreOpen && "rotate-180",
-                  )}
-                  aria-hidden
+            {navEntries.map((entry) =>
+              "items" in entry ? (
+                <DesktopNavDropdown
+                  key={entry.label}
+                  label={entry.label}
+                  items={entry.items}
                 />
-              </button>
-              {moreOpen ? (
-                <div
-                  className="absolute left-1/2 top-full mt-2 -translate-x-1/2 min-w-[12.5rem] rounded-lg bg-white py-2 px-1 shadow-lg ring-1 ring-black/5 z-[60]"
-                  role="menu"
+              ) : (
+                <AppLink
+                  key={entry.href}
+                  href={entry.href}
+                  className={NAV_LINK_CLASS}
                 >
-                  {moreLinks.map((item) => (
-                    <AppLink
-                      key={item.href}
-                      href={item.href}
-                      role="menuitem"
-                      className="block px-3 py-2.5 text-sm text-[#1f2937] rounded-md hover:bg-gray-100 transition-colors font-sans font-medium"
-                      onClick={() => setMoreOpen(false)}
-                    >
-                      {item.label}
-                    </AppLink>
-                  ))}
-                </div>
-              ) : null}
-            </div>
+                  {entry.label}
+                </AppLink>
+              ),
+            )}
           </nav>
 
           <div className="lg:justify-self-end flex items-center gap-3">
@@ -183,46 +259,25 @@ export default function Navbar() {
                 <div className="flex flex-col gap-8 mt-6">
                   <BrandMark showTaglineOnMobile />
                   <nav className="flex flex-col gap-0 border-t border-gray-700/50 pt-6">
-                    {mainNavLinks.map((link) => (
-                      <AppLink
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMobileOpen(false)}
-                        className="text-white py-3.5 px-3 text-base font-medium border-b border-gray-700/35 hover:bg-white/5 rounded-md transition-colors"
-                      >
-                        {link.label}
-                      </AppLink>
-                    ))}
-                    <div className="border-b border-gray-700/35">
-                      <button
-                        type="button"
-                        className="flex w-full items-center justify-between text-white py-3.5 px-3 text-base font-medium hover:bg-white/5 rounded-md transition-colors"
-                        onClick={() => setMobileMoreOpen((v) => !v)}
-                        aria-expanded={mobileMoreOpen}
-                      >
-                        More
-                        <ChevronDown
-                          className={cn(
-                            "size-5 transition-transform",
-                            mobileMoreOpen && "rotate-180",
-                          )}
+                    {navEntries.map((entry) =>
+                      "items" in entry ? (
+                        <MobileNavGroup
+                          key={entry.label}
+                          label={entry.label}
+                          items={entry.items}
+                          onNavigate={() => setMobileOpen(false)}
                         />
-                      </button>
-                      {mobileMoreOpen ? (
-                        <div className="pb-3 pl-2 space-y-1">
-                          {moreLinks.map((item) => (
-                            <AppLink
-                              key={item.href}
-                              href={item.href}
-                              onClick={() => setMobileOpen(false)}
-                              className="block py-2.5 px-3 text-[#94a3b8] text-sm font-medium rounded-md hover:text-white hover:bg-white/10"
-                            >
-                              {item.label}
-                            </AppLink>
-                          ))}
-                        </div>
-                      ) : null}
-                    </div>
+                      ) : (
+                        <AppLink
+                          key={entry.href}
+                          href={entry.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="text-white py-3.5 px-3 text-base font-medium border-b border-gray-700/35 hover:bg-white/5 rounded-md transition-colors"
+                        >
+                          {entry.label}
+                        </AppLink>
+                      ),
+                    )}
                   </nav>
                   <AppLink
                     href="/start-your-journey"
